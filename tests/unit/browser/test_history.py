@@ -88,7 +88,8 @@ class TestGetting:
             raise sql.KnownError("Database disk image is malformed")
 
         monkeypatch.setattr(web_history._between_query, 'run', raise_error)
-        assert list(web_history.entries_between(100, 200)) == []
+        with caplog.at_level(logging.ERROR):
+            assert list(web_history.entries_between(100, 200)) == []
         msg = message_mock.getmsg(usertypes.MessageLevel.error)
         assert msg.text == "Failed to read history: Database disk image is malformed"
 
@@ -97,7 +98,8 @@ class TestGetting:
             raise sql.KnownError("Database disk image is malformed")
 
         monkeypatch.setattr(web_history._before_query, 'run', raise_error)
-        assert list(web_history.entries_before(200, limit=10, offset=0)) == []
+        with caplog.at_level(logging.ERROR):
+            assert list(web_history.entries_before(200, limit=10, offset=0)) == []
         msg = message_mock.getmsg(usertypes.MessageLevel.error)
         assert msg.text == "Failed to read history: Database disk image is malformed"
 
@@ -106,7 +108,8 @@ class TestGetting:
             raise sql.KnownError("Database disk image is malformed")
 
         monkeypatch.setattr(web_history._contains_query, 'run', raise_error)
-        assert 'http://example.com' not in web_history
+        with caplog.at_level(logging.ERROR):
+            assert 'http://example.com' not in web_history
         msg = message_mock.getmsg(usertypes.MessageLevel.error)
         assert msg.text == "Failed to read history: Database disk image is malformed"
 
