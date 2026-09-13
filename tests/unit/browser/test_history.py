@@ -83,7 +83,7 @@ class TestGetting:
                  web_history.entries_before(12348, limit=3, offset=2)]
         assert times == [12348, 12347, 12346]
 
-    def test_entries_between_sql_error(self, monkeypatch, web_history, message_mock):
+    def test_entries_between_sql_error(self, monkeypatch, web_history, message_mock, caplog):
         def raise_error(**_kwargs):
             raise sql.KnownError("Database disk image is malformed")
 
@@ -92,7 +92,7 @@ class TestGetting:
         msg = message_mock.getmsg(usertypes.MessageLevel.error)
         assert msg.text == "Failed to read history: Database disk image is malformed"
 
-    def test_entries_before_sql_error(self, monkeypatch, web_history, message_mock):
+    def test_entries_before_sql_error(self, monkeypatch, web_history, message_mock, caplog):
         def raise_error(**_kwargs):
             raise sql.KnownError("Database disk image is malformed")
 
@@ -101,7 +101,7 @@ class TestGetting:
         msg = message_mock.getmsg(usertypes.MessageLevel.error)
         assert msg.text == "Failed to read history: Database disk image is malformed"
 
-    def test_contains_sql_error(self, monkeypatch, web_history, message_mock):
+    def test_contains_sql_error(self, monkeypatch, web_history, message_mock, caplog):
         def raise_error(**_kwargs):
             raise sql.KnownError("Database disk image is malformed")
 
